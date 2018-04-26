@@ -10,7 +10,7 @@
   
   <title>
     
-      Hello World | Abekabe&#39;s Page
+      Build a BIND DNS Server | Abekabe&#39;s Page
     
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -137,8 +137,8 @@
   </div>
 </header>
     <div id="article-banner">
-  <h2>Hello World</h2>
-  <p class="post-date">2018-01-15</p>
+  <h2>Build a BIND DNS Server</h2>
+  <p class="post-date">2018-04-27</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
@@ -146,17 +146,48 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+    <section class="markdown-content"><p>這次的NA作業是在伺服器提供DNS（Domain Name System）的服務，甚至管理log檔與簽章都是作業的規格之一，這份作業我花了將近30小時才順利完成（汗，以下就來講解DNS server的架設與管理吧！</p>
+<h2 id="使用BIND架設DNS-server"><a href="#使用BIND架設DNS-server" class="headerlink" title="使用BIND架設DNS server"></a>使用BIND架設DNS server</h2><h3 id="zone-configuration"><a href="#zone-configuration" class="headerlink" title="zone configuration"></a>zone configuration</h3><p>BIND使用zone來區分不同Domain name的指向，原本該設定的named.conf include了三個檔案方便分別放不同功能的設定，而zone的設定通常是打在named.conf.local裡面，以下是zone的基本格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;your domain-name&quot; &#123;</span><br><span class="line">	type ; // master or slave</span><br><span class="line">    file ; // your file path</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>以下是真實檔案的範例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;nphw2-0410817.nctucs.net&quot; &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;/etc/bind/zones/internal/db.sub.nphw2-0410817.nctucs.net&quot;;</span><br><span class="line">        allow-transfer &#123; trust; &#125;;         # ns2 private IP address - secondary</span><br><span class="line">        notify yes;</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>type 分為master與slave，master就是這個zone紀錄檔的擁有者，zone file由他編寫，而slave則可以同步master更新後的檔案，allow-transfer 為了要紀錄哪個ip可以直接拿到你dns的紀錄檔，通常設定自己信任的伺服器或是可以設為 any。</p>
+<h3 id="zone-file"><a href="#zone-file" class="headerlink" title="zone file"></a>zone file</h3><p>接下來是zone file的編寫，首先要知道zone file裡面的紀錄分成很多種type，最基本的分別是</p>
+<ul>
+<li><p>SOA record</p>
+<p>用來紀錄zone file的資訊，例如擁有者是誰、版本等等，基本格式如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@       IN      SOA     owner_dns server domain 	owner_email (</span><br><span class="line">                        ; Serial</span><br><span class="line">                        ; Refresh</span><br><span class="line">                        ; Retry</span><br><span class="line">                        ; Expire</span><br><span class="line">                        ; Negative Cache TTL </span><br><span class="line">                        )</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>NS record</p>
+<p>用來紀錄哪些dns server在管理這個zone file，因為一個zone file不只會存在一台伺服器中，因此提供管理的server才能找到此zone file，基本格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@       IN      NS		dns server domain</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>A record</p>
+<p>用來紀錄domain name對應到的IP address，可以說是dns最重要的功能了吧？基本格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Domain name		IN      A       IP address</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MX record</p>
+<p>用於紀錄信箱domain的形式，用法跟A record一樣這邊就不贅述了</p>
+</li>
+<li><p>CNAME record</p>
+<p>通常打網址的時候常常會多打或打錯，最常見的就是多打了www了，CNAME record可以將兩個網址指到同一個A record上面，以處理這種錯誤，基本格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">domain    IN      CNAME   domain which your already record</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>還有一些額外的用法可以縮減你打相同domain例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@ORIGIN nphw2-0410817.nctucs.net.</span><br></pre></td></tr></table></figure></p>
+<p>可以讓你在下面的record都不用再打後面一長串，像是sub.nphw2-0410817.nctucs.net.就只要打sub就好了</p>
+<p>以下是zone file的真實檔案範例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$TTL    3600</span><br><span class="line">@       IN      SOA     ns.nphw2-0410817.nctucs.net. admin.nphw2-0410817.nctucs.net. (</span><br><span class="line">                        2018042502      ; Serial</span><br><span class="line">                        604800          ; Refresh</span><br><span class="line">                        86400           ; Retry</span><br><span class="line">                        2419200         ; Expire</span><br><span class="line">                        604800 )        ; Negative Cache TTL</span><br><span class="line">; name servers - NS records</span><br><span class="line">@       IN      NS      ns.nphw2-0412241.nctucs.net.</span><br><span class="line">@       IN      NS      ns.nphw2-0410817.nctucs.net.</span><br><span class="line">  </span><br><span class="line">; name servers - A records</span><br><span class="line">@       IN      A       167.99.71.71</span><br><span class="line">ws      IN      A       140.113.235.151</span><br><span class="line">demo    IN      CNAME   ws</span><br></pre></td></tr></table></figure></p>
+<p>這樣一來就建立好最基本DNS server的功能，今天就先講到這邊，以後在補充其他功能。</p>
 </section>
     <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#NA" >
+    <span class="tag-code">NA</span>
+  </a>
+
+      </div>
     
     <!-- Tags END -->
     <!-- NAV START -->
@@ -164,13 +195,13 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-    
-      <a class="nav-right" href="/2018/04/27/Build-a-BIND-DNS-Server/">
+      <a class="nav-left" href="/2018/01/15/hello-world/">
+        <span class="nav-arrow">← </span>
         
-          Build a BIND DNS Server
+          Hello World
         
-        <span class="nav-arrow"> →</span>
       </a>
+    
     
   </div>
 
@@ -191,7 +222,7 @@
   <div class="toc-main">
     <strong class="toc-title">Catalog</strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Quick-Start"><span class="toc-nav-text">Quick Start</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Create-a-new-post"><span class="toc-nav-text">Create a new post</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Run-server"><span class="toc-nav-text">Run server</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Generate-static-files"><span class="toc-nav-text">Generate static files</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Deploy-to-remote-sites"><span class="toc-nav-text">Deploy to remote sites</span></a></li></ol></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#使用BIND架設DNS-server"><span class="toc-nav-text">使用BIND架設DNS server</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#zone-configuration"><span class="toc-nav-text">zone configuration</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#zone-file"><span class="toc-nav-text">zone file</span></a></li></ol></li></ol>
     
   </div>
 </aside>
@@ -201,7 +232,7 @@
 
 <script>
   (function () {
-    var url = '/child/2018/01/15/hello-world/';
+    var url = '/child/2018/04/27/Build-a-BIND-DNS-Server/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -257,7 +288,7 @@
     var gitmentConfig = "abekabe";
     if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
-        id: "Hello World",
+        id: "Build a BIND DNS Server",
         owner: "abekabe",
         repo: "abekabe.github.io",
         oauth: {
