@@ -147,11 +147,11 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>這次的NA作業是在伺服器提供DNS（Domain Name System）的服務，甚至管理log檔與簽章都是作業的規格之一，這份作業我花了將近30小時才順利完成（汗，以下就來講解DNS server的架設與管理吧！</p>
-<h2 id="使用BIND架設DNS-server"><a href="#使用BIND架設DNS-server" class="headerlink" title="使用BIND架設DNS server"></a>使用BIND架設DNS server</h2><h3 id="zone-configuration"><a href="#zone-configuration" class="headerlink" title="zone configuration"></a>zone configuration</h3><p>BIND使用zone來區分不同Domain name的指向，原本該設定的named.conf include了三個檔案方便分別放不同功能的設定，而zone的設定通常是打在named.conf.local裡面，以下是zone的基本格式</p>
+<h1 id="使用BIND架設DNS-server"><a href="#使用BIND架設DNS-server" class="headerlink" title="使用BIND架設DNS server"></a>使用BIND架設DNS server</h1><h2 id="Zone-configuration"><a href="#Zone-configuration" class="headerlink" title="Zone configuration"></a>Zone configuration</h2><p>BIND使用zone來區分不同Domain name的指向，原本該設定的named.conf include了三個檔案方便分別放不同功能的設定，而zone的設定通常是打在named.conf.local裡面，以下是zone的基本格式</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;your domain-name&quot; &#123;</span><br><span class="line">	type ; // master or slave</span><br><span class="line">    file ; // your file path</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <p>以下是真實檔案的範例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;nphw2-0410817.nctucs.net&quot; &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;/etc/bind/zones/internal/db.sub.nphw2-0410817.nctucs.net&quot;;</span><br><span class="line">        allow-transfer &#123; trust; &#125;;         # ns2 private IP address - secondary</span><br><span class="line">        notify yes;</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure></p>
 <p>type 分為master與slave，master就是這個zone紀錄檔的擁有者，zone file由他編寫，而slave則可以同步master更新後的檔案，allow-transfer 為了要紀錄哪個ip可以直接拿到你dns的紀錄檔，通常設定自己信任的伺服器或是可以設為 any。</p>
-<h3 id="zone-file"><a href="#zone-file" class="headerlink" title="zone file"></a>zone file</h3><p>接下來是zone file的編寫，首先要知道zone file裡面的紀錄分成很多種type，最基本的分別是</p>
+<h2 id="Zone-file"><a href="#Zone-file" class="headerlink" title="Zone file"></a>Zone file</h2><p>接下來是zone file的編寫，首先要知道zone file裡面的紀錄分成很多種type，最基本的分別是</p>
 <ul>
 <li><p>SOA record</p>
 <p>用來紀錄zone file的資訊，例如擁有者是誰、版本等等，基本格式如下</p>
@@ -229,7 +229,7 @@
   <div class="toc-main">
     <strong class="toc-title">Catalog</strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#使用BIND架設DNS-server"><span class="toc-nav-text">使用BIND架設DNS server</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#zone-configuration"><span class="toc-nav-text">zone configuration</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#zone-file"><span class="toc-nav-text">zone file</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Master-and-Slave"><span class="toc-nav-text">Master and Slave</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#View"><span class="toc-nav-text">View</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#使用BIND架設DNS-server"><span class="toc-nav-text">使用BIND架設DNS server</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Zone-configuration"><span class="toc-nav-text">Zone configuration</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Zone-file"><span class="toc-nav-text">Zone file</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Master-and-Slave"><span class="toc-nav-text">Master and Slave</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#View"><span class="toc-nav-text">View</span></a></li></ol></li></ol>
     
   </div>
 </aside>
