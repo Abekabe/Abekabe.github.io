@@ -1,211 +1,380 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="utf-8">
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="yanm1ng&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
   
-
+    <link rel="shortcut icon" href="/css/images/logo.png">
   
-  <title>lxc_deploy | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="LXC佈署這是很久以前做NA作業時候留下來的LXC佈署筆記，如果有時間會回來詳細的補完（雖然發現Docker真的好用ww sudo pacman -S lxc vim /etc/default/lxc123456lxc.net.0.type = vethlxc.net.0.link = lxcbr0lxc.net.0.flags = uplxc.net.0.hwaddr = 00:16:3e:xx">
-<meta name="keywords" content="NA">
-<meta property="og:type" content="article">
-<meta property="og:title" content="lxc_deploy">
-<meta property="og:url" content="http://abekabe.github.io/2019/03/18/lxc-deploy/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="LXC佈署這是很久以前做NA作業時候留下來的LXC佈署筆記，如果有時間會回來詳細的補完（雖然發現Docker真的好用ww sudo pacman -S lxc vim /etc/default/lxc123456lxc.net.0.type = vethlxc.net.0.link = lxcbr0lxc.net.0.flags = uplxc.net.0.hwaddr = 00:16:3e:xx">
-<meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-03-18T09:15:22.811Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lxc_deploy">
-<meta name="twitter:description" content="LXC佈署這是很久以前做NA作業時候留下來的LXC佈署筆記，如果有時間會回來詳細的補完（雖然發現Docker真的好用ww sudo pacman -S lxc vim /etc/default/lxc123456lxc.net.0.type = vethlxc.net.0.link = lxcbr0lxc.net.0.flags = uplxc.net.0.hwaddr = 00:16:3e:xx">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
+  <title>
+    
+      lxc_deploy | Hexo
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
+  
+    css('css/plugins/gitment.css')
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+    <script src="/js/gitment.js"></script>
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
 </head>
-</html>
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://abekabe.github.io"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-lxc-deploy" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/18/lxc-deploy/" class="article-date">
-  <time datetime="2019-03-18T09:14:15.000Z" itemprop="datePublished">2019-03-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      lxc_deploy
-    </h1>
-  
+<div class="wechat-share">
+  <img src="/css/images/logo.png">
+</div>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="LXC佈署"><a href="#LXC佈署" class="headerlink" title="LXC佈署"></a>LXC佈署</h1><p>這是很久以前做NA作業時候留下來的LXC佈署筆記，如果有時間會回來詳細的補完（雖然發現Docker真的好用ww</p>
-<p>sudo pacman -S lxc</p>
-<p>vim /etc/default/lxc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lxc.net.0.type = veth</span><br><span class="line">lxc.net.0.link = lxcbr0</span><br><span class="line">lxc.net.0.flags = up</span><br><span class="line">lxc.net.0.hwaddr = 00:16:3e:xx:xx:xx</span><br><span class="line">lxc.idmap = u 0 100000 65536</span><br><span class="line">lxc.idmap = g 0 100000 65536</span><br></pre></td></tr></table></figure></p>
-<p>vim /etc/default/lxc-net<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># Leave USE_LXC_BRIDGE as &quot;true&quot; if you want to use lxcbr0 for your</span><br><span class="line"># containers.  Set to &quot;false&quot; if you&apos;ll use virbr0 or another existing</span><br><span class="line"># bridge, or mavlan to your host&apos;s NIC.</span><br><span class="line">USE_LXC_BRIDGE=&quot;true&quot;</span><br><span class="line"></span><br><span class="line"># If you change the LXC_BRIDGE to something other than lxcbr0, then</span><br><span class="line"># you will also need to update your /etc/lxc/default.conf as well as the</span><br><span class="line"># configuration (/var/lib/lxc/&lt;container&gt;/config) for any containers</span><br><span class="line"># already created using the default config to reflect the new bridge</span><br><span class="line"># name.</span><br><span class="line"># If you have the dnsmasq daemon installed, you&apos;ll also have to update</span><br><span class="line"># /etc/dnsmasq.d/lxc and restart the system wide dnsmasq daemon.</span><br><span class="line">LXC_BRIDGE=&quot;lxcbr0&quot;</span><br><span class="line">LXC_ADDR=&quot;10.0.3.1&quot;</span><br><span class="line">LXC_NETMASK=&quot;255.255.255.0&quot;</span><br><span class="line">LXC_NETWORK=&quot;10.0.3.0/24&quot;</span><br><span class="line">LXC_DHCP_RANGE=&quot;10.0.3.2,10.0.3.254&quot;</span><br><span class="line">LXC_DHCP_MAX=&quot;253&quot;</span><br><span class="line"># Uncomment the next line if you&apos;d like to use a conf-file for the lxcbr0</span><br><span class="line"># dnsmasq.  For instance, you can use &apos;dhcp-host=mail1,10.0.3.100&apos; to have</span><br><span class="line"># container &apos;mail1&apos; always get ip address 10.0.3.100.</span><br><span class="line">#LXC_DHCP_CONFILE=/etc/lxc/dnsmasq.conf</span><br><span class="line"></span><br><span class="line"># Uncomment the next line if you want lxcbr0&apos;s dnsmasq to resolve the .lxc</span><br><span class="line"># domain.  You can then add &quot;server=/lxc/10.0.3.1&apos; (or your actual $LXC_ADDR)</span><br><span class="line"># to your system dnsmasq configuration file (normally /etc/dnsmasq.conf,</span><br><span class="line"># or /etc/NetworkManager/dnsmasq.d/lxc.conf on systems that use NetworkManager).</span><br><span class="line"># Once these changes are made, restart the lxc-net and network-manager services.</span><br><span class="line"># &apos;container1.lxc&apos; will then resolve on your host.</span><br><span class="line">#LXC_DOMAIN=&quot;lxc&quot;</span><br></pre></td></tr></table></figure></p>
-<h2 id="Create-LXC"><a href="#Create-LXC" class="headerlink" title="Create LXC"></a>Create LXC</h2><p>lxc-create -n playtime -t download – –dist archlinux –release current –arch amd64<br>lxc-start -n playtime<br>lxc-attach -n playtime</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://abekabe.github.io/2019/03/18/lxc-deploy/" data-id="cjte4w0500000atsbmp9juxzi" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NA/">NA</a></li></ul>
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-  
-    <a href="/2019/03/18/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Hexo</span>
     </a>
-  
-</nav>
-
-  
-</article>
-
-</section>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
         
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/NA/">NA</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/NA/" style="font-size: 10px;">NA</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2019/03/18/lxc-deploy/">lxc_deploy</a>
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
           </li>
         
-          <li>
-            <a href="/2019/03/18/hello-world/">Hello World</a>
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
           </li>
         
       </ul>
     </div>
   </div>
+</header>
 
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2019 Abekabe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
+    <div id="article-banner">
+  <h2>lxc_deploy</h2>
+  <p class="post-date">2019-03-18</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
   </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="LXC佈署"><a href="#LXC佈署" class="headerlink" title="LXC佈署"></a>LXC佈署</h1><p>這是很久以前做NA作業時候留下來的LXC佈署筆記，如果有時間會回來詳細的補完（雖然發現Docker真的好用ww</p>
+<p>sudo pacman -S lxc</p>
+<p>vim /etc/default/lxc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lxc.net.0.type = veth</span><br><span class="line">lxc.net.0.link = lxcbr0</span><br><span class="line">lxc.net.0.flags = up</span><br><span class="line">lxc.net.0.hwaddr = 00:16:3e:xx:xx:xx</span><br><span class="line">lxc.idmap = u 0 100000 65536</span><br><span class="line">lxc.idmap = g 0 100000 65536</span><br></pre></td></tr></table></figure></p>
+<p>vim /etc/default/lxc-net<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># Leave USE_LXC_BRIDGE as &quot;true&quot; if you want to use lxcbr0 for your</span><br><span class="line"># containers.  Set to &quot;false&quot; if you&apos;ll use virbr0 or another existing</span><br><span class="line"># bridge, or mavlan to your host&apos;s NIC.</span><br><span class="line">USE_LXC_BRIDGE=&quot;true&quot;</span><br><span class="line"></span><br><span class="line"># If you change the LXC_BRIDGE to something other than lxcbr0, then</span><br><span class="line"># you will also need to update your /etc/lxc/default.conf as well as the</span><br><span class="line"># configuration (/var/lib/lxc/&lt;container&gt;/config) for any containers</span><br><span class="line"># already created using the default config to reflect the new bridge</span><br><span class="line"># name.</span><br><span class="line"># If you have the dnsmasq daemon installed, you&apos;ll also have to update</span><br><span class="line"># /etc/dnsmasq.d/lxc and restart the system wide dnsmasq daemon.</span><br><span class="line">LXC_BRIDGE=&quot;lxcbr0&quot;</span><br><span class="line">LXC_ADDR=&quot;10.0.3.1&quot;</span><br><span class="line">LXC_NETMASK=&quot;255.255.255.0&quot;</span><br><span class="line">LXC_NETWORK=&quot;10.0.3.0/24&quot;</span><br><span class="line">LXC_DHCP_RANGE=&quot;10.0.3.2,10.0.3.254&quot;</span><br><span class="line">LXC_DHCP_MAX=&quot;253&quot;</span><br><span class="line"># Uncomment the next line if you&apos;d like to use a conf-file for the lxcbr0</span><br><span class="line"># dnsmasq.  For instance, you can use &apos;dhcp-host=mail1,10.0.3.100&apos; to have</span><br><span class="line"># container &apos;mail1&apos; always get ip address 10.0.3.100.</span><br><span class="line">#LXC_DHCP_CONFILE=/etc/lxc/dnsmasq.conf</span><br><span class="line"></span><br><span class="line"># Uncomment the next line if you want lxcbr0&apos;s dnsmasq to resolve the .lxc</span><br><span class="line"># domain.  You can then add &quot;server=/lxc/10.0.3.1&apos; (or your actual $LXC_ADDR)</span><br><span class="line"># to your system dnsmasq configuration file (normally /etc/dnsmasq.conf,</span><br><span class="line"># or /etc/NetworkManager/dnsmasq.d/lxc.conf on systems that use NetworkManager).</span><br><span class="line"># Once these changes are made, restart the lxc-net and network-manager services.</span><br><span class="line"># &apos;container1.lxc&apos; will then resolve on your host.</span><br><span class="line">#LXC_DOMAIN=&quot;lxc&quot;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Create-LXC"><a href="#Create-LXC" class="headerlink" title="Create LXC"></a>Create LXC</h2><p>lxc-create -n playtime -t download – –dist archlinux –release current –arch amd64<br>lxc-start -n playtime<br>lxc-attach -n playtime</p>
+</section>
+    <!-- Tags START -->
     
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#NA">
+    <span class="tag-code">NA</span>
+  </a>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/03/18/hello-world/">
+        <span class="nav-arrow">← </span>
+        
+          Hello World
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#LXC佈署"><span class="toc-nav-text">LXC佈署</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Create-LXC"><span class="toc-nav-text">Create LXC</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://abekabe.github.io/2019/03/18/lxc-deploy/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
 
+
+
+  <script>
+    var gitmentConfig = "yanm1ng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "lxc_deploy",
+        owner: "yanm1ng",
+        repo: "yanm1ng.github.io",
+        oauth: {
+          client_id: "0f87e490e00ee3fd87ef",
+          client_secret: "4a9d2b148e7971c2201ad12131ce8bf8159ccd2e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
 
 <script src="/js/script.js"></script>
-
-
-
-  </div>
-</body>
+  </body>
 </html>
