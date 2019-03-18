@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="abekabe&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      佈署郵件伺服器 | Hexo
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  
+    css('css/plugins/gitment.css')
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+    <script src="/js/gitment.js"></script>
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src></script>
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png">
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Hexo</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>佈署郵件伺服器</h2>
+  <p class="post-date">2019-03-20</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="用smtp佈署mail-server"><a href="#用smtp佈署mail-server" class="headerlink" title="用smtp佈署mail server"></a>用smtp佈署mail server</h1><p>這份紀錄也是我在上NA時的一份作業紀錄，主要目的事要架起一個mail server，並且擁有spf,dkim,dmarc等保護協定的認證以及很多其餘的小功能，以完成一個安全的mail server，至於這幾個協定的功能我這邊就不再贅述，只敘述過程。</p>
+<h2 id="佈署smtp"><a href="#佈署smtp" class="headerlink" title="佈署smtp"></a>佈署smtp</h2><p>send port gcp ban<br>smtp_tls_security_level = encrypt<br>smtp_sasl_auth_enable = yes<br>smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd<br>header_size_limit = 4096000<br>smtp_sasl_security_options = noanonymous</p>
+<p>openssl req -new -x509 -days 365 -nodes -out /etc/postfix/ssl_key/smtp.key -keyout /etc/postfix/ssl_key/smtp.pam<br>postconf -e ‘smtpd_tls_cert_file = /etc/postfix/ssl_key/smtp.pam’<br>postconf -e ‘smtpd_tls_key_file = /etc/postfix/ssl_key/smtp.key’</p>
+<p>sudo apt install dovecot-common dovecot-imapd dovecot-pop3d</p>
+<h4 id="etc-dovecot-conf-d-10-auth-conf"><a href="#etc-dovecot-conf-d-10-auth-conf" class="headerlink" title="/etc/dovecot/conf.d/10-auth.conf"></a>/etc/dovecot/conf.d/10-auth.conf</h4><p>disable_plaintext_auth = yes<br>…<br>auth_mechanisms = plain login<br><a href="http://lomu.me/post/SPF-DKIM-DMARC-PTR" target="_blank" rel="noopener">http://lomu.me/post/SPF-DKIM-DMARC-PTR</a></p>
+<h4 id="etc-dovecot-dovecot-conf"><a href="#etc-dovecot-dovecot-conf" class="headerlink" title="/etc/dovecot/dovecot.conf"></a>/etc/dovecot/dovecot.conf</h4><p>protocols = pop3 imap</p>
+<h4 id="forward"><a href="#forward" class="headerlink" title="~/forward"></a>~/forward</h4><p><a href="mailto:hw4user@naphw4.nctucs.net" target="_blank" rel="noopener">hw4user@naphw4.nctucs.net</a><br><a href="mailto:ms0229643@gmail.com" target="_blank" rel="noopener">ms0229643@gmail.com</a><br>\hw4user</p>
+<h3 id="etc-postfix-main-cf"><a href="#etc-postfix-main-cf" class="headerlink" title="/etc/postfix/main.cf"></a>/etc/postfix/main.cf</h3><p>virtual_alias_maps = regexp:/etc/postfix/virtual</p>
+<hr>
+<h3 id="etc-postfix-virtual"><a href="#etc-postfix-virtual" class="headerlink" title="/etc/postfix/virtual"></a>/etc/postfix/virtual</h3><p>/^<a href="mailto:.*demo.*@mail.nphw2-0410817.nctucs.net" target="_blank" rel="noopener">.*demo.*@mail.nphw2-0410817.nctucs.net</a>$/ <a href="mailto:hw4user@mail.nphw2-0410817.nctucs.net" target="_blank" rel="noopener">hw4user@mail.nphw2-0410817.nctucs.net</a><br>/^(.<em>)+.</em>@mail.nphw2-0410817.nctucs.net$/ <a href="mailto:$1@mail.nphw2-0410817.nctucs.net" target="_blank" rel="noopener">$1@mail.nphw2-0410817.nctucs.net</a></p>
+<h2 id="Sender-Rewriting-Schema"><a href="#Sender-Rewriting-Schema" class="headerlink" title="Sender Rewriting Schema"></a>Sender Rewriting Schema</h2><p>sudo apt install postsrsd<br>sudo postconf -e “sender_canonical_maps = tcp:127.0.0.1:10001”<br>sudo postconf -e “sender_canonical_classes = envelope_sender”<br>sudo postconf -e “recipient_canonical_maps = tcp:127.0.0.1:10002”<br>sudo postconf -e “recipient_canonical_classes = envelope_recipient,header_recipient”</p>
+<h2 id="Postgrey"><a href="#Postgrey" class="headerlink" title="Postgrey"></a>Postgrey</h2><p>sudo apt-get install postgrey<br>sudo vim /etc/default/postgrey<br>POSTGREY_OPTS=”–inet=10023  –delay=60”</p>
+<h2 id="smap-reject"><a href="#smap-reject" class="headerlink" title="smap reject"></a>smap reject</h2><p>smtpd_recipient_restrictions = permit_sasl_authenticated,<br>        permit_mynetworks,<br>        reject_unauth_destination,<br>        reject_rbl_client zen.spamhaus.org,<br>        check_policy_service inet:127.0.0.1:10023</p>
+<h2 id="SPF"><a href="#SPF" class="headerlink" title="SPF"></a>SPF</h2><p>sudo vim /etc/bind/zones/db.nphw2-0410817.nctucs.net<br>;SPF record<br>mail    IN      TXT     “v=spf1 a mx -all”<br>mail    IN      SPF     “v=spf1 a mx -all”<br><a href="https://serverfault.com/questions/126828/configure-a-spf-rule-on-ubuntu?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa" target="_blank" rel="noopener">https://serverfault.com/questions/126828/configure-a-spf-rule-on-ubuntu?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa</a></p>
+<p>sudo vim /etc/opendkim.conf<br>Domain    mail.nphw2-0410817.nctucs.net<br>KeyFile    /etc/postfix/dkim.key<br>Selector    dkim<br>SOCKET    inet:8891@localhost</p>
+<p>sudo vim /etc/default/opendkim<br>SOCKET=”inet:8891@localhost”</p>
+<p>sudo vim /etc/postfix/main.cf</p>
+<h2 id="DKIM"><a href="#DKIM" class="headerlink" title="DKIM"></a>DKIM</h2><p>milter_default_action = accept<br>milter_protocol = 2<br>smtpd_milters = inet:localhost:8891<br>non_smtpd_milters = inet:localhost:8891</p>
+<h3 id="genkey"><a href="#genkey" class="headerlink" title="genkey"></a>genkey</h3><p>opendkim-genkey -t -s dkim -d mail.nphw2-0410817.nctucs.net<br>dkim._domainkey IN      TXT     ( “v=DKIM1; k=rsa; t=y; “<br>          “p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCq8fM4NIW8DvJ5VW6YbRM+bkW/uKoWBpVdBpCgECQq2m95ho7ipTYkdzRQ7FeMbXE7E/2QsfagvjWkdU7H9lwW4RaptPHZ9FO5fqOD1HWVLQS0d4astoyT75Kxe+damLwp2VrlDCC2W4StYJ8FPSr95mYZuOzwLWmN8azjSyRYpwIDAQAB” )  ; —– DKIM key dkim for mail.nphw2-0410817.nctucs.net</p>
+<p>dkim._domainkey IN      TXT     ( “v=DKIM1; k=rsa; t=y; “<br>    “p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDLZTmRvIwPU7t4X45Ox0aG/+qIE7ejcemQd6BVvSEOV//Fbbnc/8xf/QI+yYEyYEBAAhsb/CeXOrVbKLLl+8qZGIeT8AVhuqXYy+k6G1JIg8E306z/LYJjS3YleOFJ1Z54A0Vqk7LfqaUFtFcOv+sn5RpLwSlTk0ffI9rV55040wIDAQAB” )  ; —– DKIM key dkim for nphw2-0410817.nctucs.net</p>
+<p>dkim._domainkey　TXT　v=DKIM1; k=rsa;s=email;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwsf4PKUbGHLFkXYmER8W<br>0jOdokHeahe26fBY0oB/qKnTxBuIkb62JcGWn97wYEoyRIX22YHvB9k34rN2dDOY<br>relR8c0KOLT57RXFhd3BhnREz631AEuNmIWv0avxQWM5rAZBT1CIGQD67ucnoiM4<br>dVT3Nyn4fGD3c4fiosGkxxcg8TjB5f60vJq7CLe+FenqchCHgC82NyN/1yGU2abI<br>bmiFENAgLfwyME0OcD3HTq+8NU1pibwRmIu993Xj27gHMktYfw8K9FghNZGsuGaz<br>6d/xfUCL2jKKGclkXAW+SD3OGqqCl+kPf7kFNpCASZfzbsCpY9OZw6THvnQVvM7H<br>nwIDAQAB</p>
+<h3 id="add-to-bind-record"><a href="#add-to-bind-record" class="headerlink" title="add to bind record"></a>add to bind record</h3><p>sudo vim /etc/bind/zones/db.nphw2-0410817.nctucs.net<br>;DKIM record<br>dkim._domainkey.mail     IN     TXT     “v=DKIM1; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCq8fM4NIW8DvJ5VW6YbRM+bkW/uKoWBpVdBpCgECQq2m95ho7ipTYkdzRQ7FeMbXE7E/2QsfagvjWkdU7H9lwW4RaptPHZ9FO5fqOD1HWVLQS0d4astoyT75Kxe+damLwp2VrlDCC2W4StYJ8FPSr95mYZuOzwLWmN8azjSyRYpwIDAQAB”</p>
+<p><a href="https://www.exratione.com/2014/07/setting-up-spf-and-dkim-for-an-ubuntu-1404-mail-server/" target="_blank" rel="noopener">https://www.exratione.com/2014/07/setting-up-spf-and-dkim-for-an-ubuntu-1404-mail-server/</a></p>
+<h2 id="DMARC"><a href="#DMARC" class="headerlink" title="DMARC"></a>DMARC</h2><p>sudo vim /etc/bind/zones/db.nphw2-0410817.nctucs.net<br>;DMARC record<br>_dmarc.mail 1800 IN TXT “v=DMARC1; p=reject; <a href="mailto:rua=hw4user@mail.nphw2-0410817.nctucs.net" target="_blank" rel="noopener">rua=hw4user@mail.nphw2-0410817.nctucs.net</a>; <a href="mailto:ruf=hw4user@mail.nphw2-0410817.nctucs.net" target="_blank" rel="noopener">ruf=hw4user@mail.nphw2-0410817.nctucs.net</a>“<br><a href="https://petermolnar.net/howto-spf-dkim-dmarc-postfix/" target="_blank" rel="noopener">https://petermolnar.net/howto-spf-dkim-dmarc-postfix/</a></p>
+<h2 id="Ngnix"><a href="#Ngnix" class="headerlink" title="Ngnix"></a>Ngnix</h2><p><a href="https://blog.gtwang.org/linux/nginx-create-and-install-ssl-certificate-on-ubuntu-linux/" target="_blank" rel="noopener">https://blog.gtwang.org/linux/nginx-create-and-install-ssl-certificate-on-ubuntu-linux/</a></p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/03/19/vpn-snmp-deploy/">
+        <span class="nav-arrow">← </span>
+        
+          佈署vpn及snmp
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#用smtp佈署mail-server"><span class="toc-nav-text">用smtp佈署mail server</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#佈署smtp"><span class="toc-nav-text">佈署smtp</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#etc-dovecot-conf-d-10-auth-conf"><span class="toc-nav-text">/etc/dovecot/conf.d/10-auth.conf</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#etc-dovecot-dovecot-conf"><span class="toc-nav-text">/etc/dovecot/dovecot.conf</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#forward"><span class="toc-nav-text">~/forward</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#etc-postfix-main-cf"><span class="toc-nav-text">/etc/postfix/main.cf</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#etc-postfix-virtual"><span class="toc-nav-text">/etc/postfix/virtual</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Sender-Rewriting-Schema"><span class="toc-nav-text">Sender Rewriting Schema</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Postgrey"><span class="toc-nav-text">Postgrey</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#smap-reject"><span class="toc-nav-text">smap reject</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#SPF"><span class="toc-nav-text">SPF</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#DKIM"><span class="toc-nav-text">DKIM</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#genkey"><span class="toc-nav-text">genkey</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#add-to-bind-record"><span class="toc-nav-text">add to bind record</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#DMARC"><span class="toc-nav-text">DMARC</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Ngnix"><span class="toc-nav-text">Ngnix</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://abekabe.github.io/2019/03/20/mail-server-deploy/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "佈署郵件伺服器",
+        owner: "",
+        repo: "",
+        oauth: {
+          client_id: "",
+          client_secret: ""
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
